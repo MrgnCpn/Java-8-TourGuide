@@ -9,6 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -35,11 +39,12 @@ public class TourGuideService {
 	private final TripPricer tripPricer = new TripPricer();
 	public final Tracker tracker;
 	boolean testMode = true;
+	public ExecutorService executorService;
 	
 	public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService) {
 		this.gpsUtil = gpsUtil;
 		this.rewardsService = rewardsService;
-		
+		this.executorService = Executors.newFixedThreadPool(1000);
 		if(testMode) {
 			logger.info("TestMode enabled");
 			logger.debug("Initializing users");
@@ -54,10 +59,10 @@ public class TourGuideService {
 		return user.getUserRewards();
 	}
 	
-	public VisitedLocation getUserLocation(User user) {
+	public VisitedLocation getUserLocation(User user) throws ExecutionException, InterruptedException {
 		VisitedLocation visitedLocation = (user.getVisitedLocations().size() > 0) ?
 			user.getLastVisitedLocation() :
-			trackUserLocation(user);
+			trackUserLocation(user).get();
 		return visitedLocation;
 	}
 	
@@ -83,11 +88,30 @@ public class TourGuideService {
 		return providers;
 	}
 	
-	public VisitedLocation trackUserLocation(User user) {
-		VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
-		user.addToVisitedLocations(visitedLocation);
-		rewardsService.calculateRewards(user);
-		return visitedLocation;
+	public CompletableFuture<VisitedLocation> trackUserLocation(User user) {
+		return CompletableFuture.supplyAsync(() -> {
+			VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
+			user.addToVisitedLocations(visitedLocation);
+			CompletableFuture.runAsync(() -> rewardsService.calculateRewards(user));
+			return visitedLocation;
+		}, executorService);
+	}
+
+	public CompletableFuture<List<VisitedLocation>> getLocationsFromUserList(List<User> usersList){
+		List<CompletableFuture<VisitedLocation>> allVisitedLocationFutures = usersList
+				.stream()
+				.map(this::trackUserLocation).collect(Collectors.toList()
+				);
+
+		CompletableFuture<Void> allFutures = CompletableFuture.allOf(
+				allVisitedLocationFutures.toArray(new CompletableFuture[allVisitedLocationFutures.size()])
+		);
+
+		return allFutures.thenApply(v -> allVisitedLocationFutures
+				.stream()
+				.map(CompletableFuture::join)
+				.collect(Collectors.toList())
+		);
 	}
 
 	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
