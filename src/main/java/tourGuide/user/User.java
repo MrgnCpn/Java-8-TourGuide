@@ -76,7 +76,7 @@ public class User {
 	}
 	
 	public List<UserReward> getUserRewards() {
-		return userRewards;
+		return (List<UserReward>)((ArrayList<UserReward>)userRewards).clone();
 	}
 	
 	public UserPreferences getUserPreferences() {
