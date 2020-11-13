@@ -1,6 +1,10 @@
 package tourGuide.service;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -22,10 +26,12 @@ public class RewardsService {
 	private int attractionProximityRange = 200;
 	private final GpsUtil gpsUtil;
 	private final RewardCentral rewardsCentral;
+	private ExecutorService executorService;
 	
-	public RewardsService(GpsUtil gpsUtil, RewardCentral rewardCentral) {
+	public RewardsService(GpsUtil gpsUtil, RewardCentral rewardCentral, ExecutorService executorService) {
 		this.gpsUtil = gpsUtil;
 		this.rewardsCentral = rewardCentral;
+		this.executorService = executorService;
 	}
 	
 	public void setProximityBuffer(int proximityBuffer) {
@@ -39,7 +45,7 @@ public class RewardsService {
 	public void calculateRewards(User user) {
 		List<VisitedLocation> userLocations = user.getVisitedLocations();
 		List<Attraction> attractions = gpsUtil.getAttractions();
-		
+
 		for(VisitedLocation visitedLocation : userLocations) {
 			for(Attraction attraction : attractions) {
 				if(user.getUserRewards().stream().filter(r -> r.attraction.attractionName.equals(attraction.attractionName)).count() == 0) {
@@ -49,6 +55,27 @@ public class RewardsService {
 				}
 			}
 		}
+	}
+
+	public CompletableFuture<Void> calculateRewardAsync(User user){
+		return CompletableFuture.runAsync(() -> this.calculateRewards(user), executorService);
+	}
+
+	public CompletableFuture<List<Void>> calculateUsersListReward(List<User> usersList){
+		List<CompletableFuture<Void>> allCalculatedRewardFutures = usersList
+				.stream()
+				.map(this::calculateRewardAsync).collect(Collectors.toList()
+				);
+
+		CompletableFuture<Void> allFutures = CompletableFuture.allOf(
+				allCalculatedRewardFutures.toArray(new CompletableFuture[allCalculatedRewardFutures.size()])
+		);
+
+		return allFutures.thenApply(v -> allCalculatedRewardFutures
+				.stream()
+				.map(CompletableFuture::join)
+				.collect(Collectors.toList())
+		);
 	}
 	
 	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {

@@ -39,12 +39,12 @@ public class TourGuideService {
 	private final TripPricer tripPricer = new TripPricer();
 	public final Tracker tracker;
 	boolean testMode = true;
-	public ExecutorService executorService;
+	private ExecutorService executorService;
 	
-	public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService) {
+	public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService, ExecutorService executorService) {
 		this.gpsUtil = gpsUtil;
 		this.rewardsService = rewardsService;
-		this.executorService = Executors.newFixedThreadPool(1000);
+		this.executorService = executorService;
 		if(testMode) {
 			logger.info("TestMode enabled");
 			logger.debug("Initializing users");
