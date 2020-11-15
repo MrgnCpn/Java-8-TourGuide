@@ -3,12 +3,12 @@ package tourGuide;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import gpsUtil.location.Location;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -131,5 +131,15 @@ public class TestTourGuideService {
 		tourGuideService.tracker.stopTracking();
 		
 		assertEquals(5, providers.size());
+	}
+
+	@Test
+	public void getAllUsersLocations(){
+		GpsUtil gpsUtil = new GpsUtil();
+		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral(), this.executorService);
+		InternalTestHelper.setInternalUserNumber(100);
+		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, this.executorService);
+
+		assertEquals(100, tourGuideService.getAllUsersLocations().size());
 	}
 }

@@ -125,11 +125,17 @@ public class TourGuideService {
 	}
 	
 	private void addShutDownHook() {
-		Runtime.getRuntime().addShutdownHook(new Thread() { 
+		Runtime.getRuntime().addShutdownHook(new Thread() {
 		      public void run() {
 		        tracker.stopTracking();
-		      } 
-		    }); 
+		      }
+		    });
+	}
+
+	public List<VisitedLocation> getAllUsersLocations(){
+		List<VisitedLocation> usersLocationsList = new ArrayList<>();
+		this.getAllUsers().stream().forEach(u -> usersLocationsList.add(u.getLastVisitedLocation()));
+		return usersLocationsList;
 	}
 	
 	/**********************************************************************************

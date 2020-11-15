@@ -1,19 +1,14 @@
 package tourGuide;
 
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
+import com.jsoniter.output.JsonStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.jsoniter.output.JsonStream;
-
-import gpsUtil.location.VisitedLocation;
 import tourGuide.service.TourGuideService;
 import tourGuide.user.User;
-import tripPricer.Provider;
+
+import java.util.concurrent.ExecutionException;
 
 @RestController
 public class TourGuideController {
@@ -28,8 +23,7 @@ public class TourGuideController {
     
     @RequestMapping("/getLocation") 
     public String getLocation(@RequestParam String userName) throws ExecutionException, InterruptedException {
-    	VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));
-		return JsonStream.serialize(visitedLocation.location);
+		return JsonStream.serialize(tourGuideService.getUserLocation(getUser(userName)).location);
     }
     
     //  TODO: Change this method to no longer return a List of Attractions.
@@ -43,8 +37,7 @@ public class TourGuideController {
         //    Note: Attraction reward points can be gathered from RewardsCentral
     @RequestMapping("/getNearbyAttractions") 
     public String getNearbyAttractions(@RequestParam String userName) throws ExecutionException, InterruptedException {
-    	VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));
-    	return JsonStream.serialize(tourGuideService.getNearByAttractions(visitedLocation));
+    	return JsonStream.serialize(tourGuideService.getNearByAttractions(tourGuideService.getUserLocation(getUser(userName))));
     }
     
     @RequestMapping("/getRewards") 
@@ -54,7 +47,7 @@ public class TourGuideController {
     
     @RequestMapping("/getAllCurrentLocations")
     public String getAllCurrentLocations() {
-    	// TODO: Get a list of every user's most recent location as JSON
+        // TODO: Get a list of every user's most recent location as JSON
     	//- Note: does not use gpsUtil to query for their current location, 
     	//        but rather gathers the user's current location from their stored location history.
     	//
@@ -64,18 +57,16 @@ public class TourGuideController {
     	//        ...
     	//     }
     	
-    	return JsonStream.serialize("");
+    	return JsonStream.serialize(tourGuideService.getAllUsersLocations());
     }
     
     @RequestMapping("/getTripDeals")
     public String getTripDeals(@RequestParam String userName) {
-    	List<Provider> providers = tourGuideService.getTripDeals(getUser(userName));
-    	return JsonStream.serialize(providers);
+    	return JsonStream.serialize(tourGuideService.getTripDeals(getUser(userName)));
     }
     
     private User getUser(String userName) {
     	return tourGuideService.getUser(userName);
     }
-   
 
 }
