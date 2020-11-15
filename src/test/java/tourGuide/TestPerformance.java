@@ -48,6 +48,7 @@ public class TestPerformance {
 	public void highVolumeTrackLocation() throws ExecutionException, InterruptedException {
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral(), this.executorService);
+
 		// Users should be incremented up to 100,000, and test finishes within 15 minutes
 		InternalTestHelper.setInternalUserNumber(this.nbrUsers);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, this.executorService);

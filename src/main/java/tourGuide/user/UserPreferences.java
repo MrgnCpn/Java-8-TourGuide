@@ -7,7 +7,6 @@ import org.javamoney.moneta.Money;
 
 
 public class UserPreferences {
-	
 	private int attractionProximity = Integer.MAX_VALUE;
 	private CurrencyUnit currency = Monetary.getCurrency("USD");
 	private Money lowerPricePoint = Money.of(0, currency);
