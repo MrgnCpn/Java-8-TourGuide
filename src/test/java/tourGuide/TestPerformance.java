@@ -22,7 +22,7 @@ import static org.junit.Assert.assertTrue;
 
 public class TestPerformance {
 	private ExecutorService executorService = Executors.newFixedThreadPool(1000);
-	private int nbrUsers = 100000;
+	private int nbrUsers = 1000;
 	
 	/*
 	 * A note on performance improvements:

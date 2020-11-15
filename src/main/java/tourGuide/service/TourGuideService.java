@@ -2,17 +2,10 @@ package tourGuide.service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -71,7 +64,7 @@ public class TourGuideService {
 	}
 	
 	public List<User> getAllUsers() {
-		return internalUserMap.values().stream().collect(Collectors.toList());
+		return new ArrayList<>(internalUserMap.values());
 	}
 	
 	public void addUser(User user) {
@@ -116,10 +109,16 @@ public class TourGuideService {
 
 	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
 		List<Attraction> nearbyAttractions = new ArrayList<>();
-		for(Attraction attraction : gpsUtil.getAttractions()) {
-			if(rewardsService.isWithinAttractionProximity(attraction, visitedLocation.location)) {
-				nearbyAttractions.add(attraction);
-			}
+		Map<Double, Attraction> attractionMap = new HashMap<>();
+
+		gpsUtil.getAttractions().stream().forEach(a -> attractionMap.put(rewardsService.getDistance(a, visitedLocation.location), a));
+
+		int i = 5;
+		for (Map.Entry<Double, Attraction> entry : new TreeMap<>(attractionMap).entrySet()) {
+			if (i != 0) {
+				nearbyAttractions.add(entry.getValue());
+				i--;
+			} else break;
 		}
 		
 		return nearbyAttractions;
