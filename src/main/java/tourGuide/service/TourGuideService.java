@@ -123,6 +123,44 @@ public class TourGuideService {
 		
 		return nearbyAttractions;
 	}
+
+	public String getFiveClosestAttractionJSON(User user) throws ExecutionException, InterruptedException {
+		VisitedLocation userLocation = getUserLocation(user);
+		List<Attraction> closestAttractionsLists = getNearByAttractions(userLocation);
+		StringBuffer result = new StringBuffer();
+
+		result.append("{\"userLocation\" : ");
+		result.append("{").append("\"longitude\" : ").append(userLocation.location.longitude).append(",");
+		result.append("\"latitude\" : ").append(userLocation.location.latitude).append("},");
+		result.append("\"closestAttractions\" : [");
+
+		List<CompletableFuture<String>> closestAttractionsListFutures = closestAttractionsLists
+				.stream()
+				.map(a -> CompletableFuture.supplyAsync(() -> {
+						StringBuffer res = new StringBuffer();
+						res.append("{\"attractionName\" : \"").append(a.attractionName).append("\",");
+						res.append("\"city\" : \"").append(a.city).append("\",");
+						res.append("\"state\" : \"").append(a.state).append("\",");
+						res.append("\"distance\" : ").append(rewardsService.getDistance(userLocation.location, a)).append(",");
+						res.append("\"reward\" : ").append(rewardsService.getRewardPoints(a, user)).append("}");
+						return res.toString();
+					}, executorService)).collect(Collectors.toList()
+				);
+
+		CompletableFuture<Void> allFutures = CompletableFuture.allOf(
+				closestAttractionsListFutures.toArray(new CompletableFuture[closestAttractionsListFutures.size()])
+		);
+
+		CompletableFuture<List<String>> allRes = allFutures.thenApply(v -> closestAttractionsListFutures
+				.stream()
+				.map(CompletableFuture::join)
+				.collect(Collectors.toList())
+		);
+
+		result.append(allRes.get());
+		result.append("]}");
+		return result.toString();
+	}
 	
 	private void addShutDownHook() {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -136,6 +174,23 @@ public class TourGuideService {
 		List<VisitedLocation> usersLocationsList = new ArrayList<>();
 		this.getAllUsers().stream().forEach(u -> usersLocationsList.add(u.getLastVisitedLocation()));
 		return usersLocationsList;
+	}
+
+	public String getAllUsersLocationsJSON(){
+		List<VisitedLocation> allUsersLocations = getAllUsersLocations();
+		StringBuffer result = new StringBuffer();
+
+		result.append("{");
+		for (VisitedLocation visitedLocation : allUsersLocations) {
+			result.append("\"").append(visitedLocation.userId.toString()).append("\":");
+			result.append("{").append("\"longitude\" : ").append(visitedLocation.location.longitude).append(",");
+			result.append("\"latitude\" : ").append(visitedLocation.location.latitude).append("}");
+			if (!visitedLocation.equals(allUsersLocations.get(allUsersLocations.size() - 1))){
+				result.append(",");
+			}
+		}
+		result.append("}");
+		return result.toString();
 	}
 	
 	/**********************************************************************************
