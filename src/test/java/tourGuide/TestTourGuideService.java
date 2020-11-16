@@ -1,29 +1,28 @@
 package tourGuide;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import gpsUtil.location.Location;
-import org.junit.Ignore;
-import org.junit.Test;
-
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.junit.Test;
 import rewardCentral.RewardCentral;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
 import tourGuide.user.User;
 import tripPricer.Provider;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 public class TestTourGuideService {
 	private ExecutorService executorService = Executors.newFixedThreadPool(1000);
@@ -141,5 +140,56 @@ public class TestTourGuideService {
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, this.executorService);
 
 		assertEquals(100, tourGuideService.getAllUsersLocations().size());
+	}
+
+	@Test
+	public void getAllUsersLocationsJSON() throws JSONException {
+		GpsUtil gpsUtil = new GpsUtil();
+		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral(), this.executorService);
+		InternalTestHelper.setInternalUserNumber(100);
+		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, this.executorService);
+
+		int count = 0;
+		List<String> usersIdList = new ArrayList<>();
+
+		tourGuideService.getAllUsers().stream().forEach(u -> usersIdList.add(u.getUserId().toString()));
+		JSONObject jsonObject = new JSONObject(tourGuideService.getAllUsersLocationsJSON());
+
+		for (String userId : usersIdList) {
+			count ++;
+			JSONObject userLocation = jsonObject.getJSONObject(userId);
+			assertNotNull(userLocation);
+			assertNotNull(userLocation.getDouble("latitude"));
+			assertNotNull(userLocation.getDouble("longitude"));
+		}
+
+		assertEquals(100, count);
+	}
+
+	@Test
+	public void getFiveClosestAttractionJSON() throws ExecutionException, InterruptedException, JSONException {
+		GpsUtil gpsUtil = new GpsUtil();
+		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral(), this.executorService);
+		InternalTestHelper.setInternalUserNumber(1);
+		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, this.executorService);
+
+		String result = tourGuideService.getFiveClosestAttractionJSON(tourGuideService.getAllUsers().get(0));
+
+		JSONObject jsonObj = new JSONObject(result);
+		JSONObject userLocation = jsonObj.getJSONObject("userLocation");
+		assertNotNull(userLocation);
+		assertNotNull(userLocation.getDouble("latitude"));
+		assertNotNull(userLocation.getDouble("longitude"));
+		JSONArray closestAttractions = jsonObj.getJSONArray("closestAttractions");
+		assertEquals(5, closestAttractions.length());
+		for (int i = 0; i < closestAttractions.length(); i++) {
+			JSONObject attraction = closestAttractions.getJSONObject(i);
+			assertNotNull(attraction);
+			assertNotNull(attraction.getString("attractionName"));
+			assertNotNull(attraction.getString("city"));
+			assertNotNull(attraction.getString("state"));
+			assertNotNull(attraction.getDouble("distance"));
+			assertNotNull(attraction.getDouble("reward"));
+		}
 	}
 }

@@ -132,7 +132,7 @@ public class TourGuideService {
 		result.append("{\"userLocation\" : ");
 		result.append("{").append("\"longitude\" : ").append(userLocation.location.longitude).append(",");
 		result.append("\"latitude\" : ").append(userLocation.location.latitude).append("},");
-		result.append("\"closestAttractions\" : [");
+		result.append("\"closestAttractions\" : ");
 
 		List<CompletableFuture<String>> closestAttractionsListFutures = closestAttractionsLists
 				.stream()
@@ -158,7 +158,7 @@ public class TourGuideService {
 		);
 
 		result.append(allRes.get());
-		result.append("]}");
+		result.append("}");
 		return result.toString();
 	}
 	
