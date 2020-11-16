@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
 import rewardCentral.RewardCentral;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.RewardsService;
@@ -22,17 +23,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertNotNull;
 
 public class TestTourGuideService {
-	private ExecutorService executorService = Executors.newFixedThreadPool(1000);
+	private static ExecutorService executorService = Executors.newFixedThreadPool(1000);
 
 	@Test
 	public void getUserLocation() throws ExecutionException, InterruptedException {
 		GpsUtil gpsUtil = new GpsUtil();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral(), this.executorService);
+		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral(), executorService);
 		InternalTestHelper.setInternalUserNumber(0);
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, this.executorService);
+		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, executorService);
 		
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user).get();
@@ -44,9 +44,9 @@ public class TestTourGuideService {
 	@Test
 	public void addUser() {
 		GpsUtil gpsUtil = new GpsUtil();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral(), this.executorService);
+		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral(), executorService);
 		InternalTestHelper.setInternalUserNumber(0);
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, this.executorService);
+		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, executorService);
 		
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
@@ -66,9 +66,9 @@ public class TestTourGuideService {
 	@Test
 	public void getAllUsers() {
 		GpsUtil gpsUtil = new GpsUtil();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral(), this.executorService);
+		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral(), executorService);
 		InternalTestHelper.setInternalUserNumber(0);
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, this.executorService);
+		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, executorService);
 		
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
@@ -87,9 +87,9 @@ public class TestTourGuideService {
 	@Test
 	public void trackUser() throws ExecutionException, InterruptedException {
 		GpsUtil gpsUtil = new GpsUtil();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral(), this.executorService);
+		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral(), executorService);
 		InternalTestHelper.setInternalUserNumber(0);
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, this.executorService);
+		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, executorService);
 		
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user).get();
@@ -102,9 +102,9 @@ public class TestTourGuideService {
 	@Test
 	public void getNearbyAttractions() throws ExecutionException, InterruptedException {
 		GpsUtil gpsUtil = new GpsUtil();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral(), this.executorService);
+		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral(), executorService);
 		InternalTestHelper.setInternalUserNumber(0);
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, this.executorService);
+		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, executorService);
 		
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user).get();
@@ -119,9 +119,9 @@ public class TestTourGuideService {
 	@Test
 	public void getTripDeals() {
 		GpsUtil gpsUtil = new GpsUtil();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral(), this.executorService);
+		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral(), executorService);
 		InternalTestHelper.setInternalUserNumber(0);
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, this.executorService);
+		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, executorService);
 		
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 
@@ -135,9 +135,9 @@ public class TestTourGuideService {
 	@Test
 	public void getAllUsersLocations(){
 		GpsUtil gpsUtil = new GpsUtil();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral(), this.executorService);
+		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral(), executorService);
 		InternalTestHelper.setInternalUserNumber(100);
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, this.executorService);
+		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, executorService);
 
 		assertEquals(100, tourGuideService.getAllUsersLocations().size());
 	}
@@ -145,9 +145,9 @@ public class TestTourGuideService {
 	@Test
 	public void getAllUsersLocationsJSON() throws JSONException {
 		GpsUtil gpsUtil = new GpsUtil();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral(), this.executorService);
+		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral(), executorService);
 		InternalTestHelper.setInternalUserNumber(100);
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, this.executorService);
+		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, executorService);
 
 		int count = 0;
 		List<String> usersIdList = new ArrayList<>();
@@ -169,9 +169,9 @@ public class TestTourGuideService {
 	@Test
 	public void getFiveClosestAttractionJSON() throws ExecutionException, InterruptedException, JSONException {
 		GpsUtil gpsUtil = new GpsUtil();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral(), this.executorService);
+		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral(), executorService);
 		InternalTestHelper.setInternalUserNumber(1);
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, this.executorService);
+		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, executorService);
 
 		String result = tourGuideService.getFiveClosestAttractionJSON(tourGuideService.getAllUsers().get(0));
 
@@ -191,5 +191,10 @@ public class TestTourGuideService {
 			assertNotNull(attraction.getDouble("distance"));
 			assertNotNull(attraction.getDouble("reward"));
 		}
+	}
+
+	@AfterAll
+	static void undefAll(){
+		executorService = null;
 	}
 }
