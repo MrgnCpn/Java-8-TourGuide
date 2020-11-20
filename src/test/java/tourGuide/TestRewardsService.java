@@ -4,7 +4,6 @@ import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
 import org.junit.Test;
-import org.junit.jupiter.api.AfterAll;
 import rewardCentral.RewardCentral;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.RewardsService;
@@ -23,17 +22,33 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class TestRewardsService {
-	private static ExecutorService executorService = Executors.newFixedThreadPool(1000);
+	private ExecutorService executorService;
+	private GpsUtil gpsUtil;
+	private RewardsService rewardsService;
+	private TourGuideService tourGuideService;
+	private User user;
+
+	private void initTest(Integer internalUser){
+		executorService = Executors.newFixedThreadPool(1000);
+		gpsUtil = new GpsUtil();
+		rewardsService = new RewardsService(gpsUtil, new RewardCentral(), executorService);
+		InternalTestHelper.setInternalUserNumber(internalUser);
+		tourGuideService = new TourGuideService(gpsUtil, rewardsService, executorService);
+		user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
+	}
+
+	private void undefTest(){
+		executorService.shutdown();
+		executorService = null;
+		gpsUtil = null;
+		rewardsService = null;
+		tourGuideService = null;
+		user = null;
+	}
 
 	@Test
 	public void userGetRewards() throws ExecutionException, InterruptedException {
-		GpsUtil gpsUtil = new GpsUtil();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral(), executorService);
-
-		InternalTestHelper.setInternalUserNumber(0);
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, executorService);
-		
-		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
+		initTest(0);
 		Attraction attraction = gpsUtil.getAttractions().get(0);
 		user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date()));
 		tourGuideService.trackUserLocation(user).get();
@@ -41,36 +56,28 @@ public class TestRewardsService {
 		tourGuideService.tracker.stopTracking();
 
 		assertEquals(1, userRewards.size());
+		undefTest();
 	}
 
 	@Test
 	public void isWithinAttractionProximity() {
-		GpsUtil gpsUtil = new GpsUtil();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral(), executorService);
+		initTest(0);
 		Attraction attraction = gpsUtil.getAttractions().get(0);
-
 		assertTrue(rewardsService.isWithinAttractionProximity(attraction, attraction));
+		undefTest();
 	}
 
 	@Test
 	public void nearAllAttractions() {
-		GpsUtil gpsUtil = new GpsUtil();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral(), executorService);
+		initTest(1);
+
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
-
-		InternalTestHelper.setInternalUserNumber(1);
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, executorService);
-
 		rewardsService.calculateRewards(tourGuideService.getAllUsers().get(0));
 		List<UserReward> userRewards = tourGuideService.getUserRewards(tourGuideService.getAllUsers().get(0));
 
 		tourGuideService.tracker.stopTracking();
 
 		assertEquals(gpsUtil.getAttractions().size(), userRewards.size());
-	}
-
-	@AfterAll
-	static void undefAll(){
-		executorService = null;
+		undefTest();
 	}
 }
