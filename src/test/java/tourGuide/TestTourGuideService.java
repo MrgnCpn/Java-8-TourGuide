@@ -98,7 +98,7 @@ public class TestTourGuideService {
 	public void getNearbyAttractions() throws ExecutionException, InterruptedException {
 		initTest(0);
 		VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user).get();
-		List<Attraction> attractions = tourGuideService.getNearByAttractions(visitedLocation);
+		List<Attraction> attractions = tourGuideService.getNearbyAttractions(visitedLocation);
 		tourGuideService.tracker.stopTracking();
 		assertEquals(5, attractions.size());
 		undefTest();

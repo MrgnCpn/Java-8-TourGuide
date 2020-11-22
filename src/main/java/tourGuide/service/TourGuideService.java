@@ -107,7 +107,7 @@ public class TourGuideService {
 		);
 	}
 
-	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
+	public List<Attraction> getNearbyAttractions(VisitedLocation visitedLocation) {
 		List<Attraction> nearbyAttractions = new ArrayList<>();
 		Map<Double, Attraction> attractionMap = new HashMap<>();
 
@@ -126,7 +126,7 @@ public class TourGuideService {
 
 	public String getFiveClosestAttractionJSON(User user) throws ExecutionException, InterruptedException {
 		VisitedLocation userLocation = getUserLocation(user);
-		List<Attraction> closestAttractionsLists = getNearByAttractions(userLocation);
+		List<Attraction> closestAttractionsLists = getNearbyAttractions(userLocation);
 		StringBuffer result = new StringBuffer();
 
 		result.append("{\"userLocation\" : ");
