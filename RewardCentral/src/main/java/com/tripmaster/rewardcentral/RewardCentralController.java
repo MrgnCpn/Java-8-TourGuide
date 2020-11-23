@@ -11,7 +11,7 @@ import java.util.UUID;
 @RestController
 public class RewardCentralController {
     @Autowired
-    RewardCentral rewardCentral;
+    private RewardCentral rewardCentral;
 
     @GetMapping("/getAttractionRewardPoints")
     public String getAttractionRewardPoints(@RequestParam(required = true) String userId, String attractionId) {
