@@ -16,7 +16,7 @@ apply plugin: "jacoco"
 
 
 bootJar {
-    baseName = 'gpsUtil'
+    baseName = 'app'
     version =  '1.0.0'
 }
 
