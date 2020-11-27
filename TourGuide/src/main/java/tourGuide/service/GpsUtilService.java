@@ -1,13 +1,11 @@
 package tourGuide.service;
 
-import com.jsoniter.annotation.JsonObject;
-import gpsUtil.location.Attraction;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import tourGuide.models.AttractionTMP;
-import tourGuide.models.LocationTMP;
-import tourGuide.models.VisitedLocationTMP;
+import tourGuide.models.Attraction;
+import tourGuide.models.Location;
+import tourGuide.models.VisitedLocation;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -26,8 +24,8 @@ public class GpsUtilService extends ExternalApiService {
         super(httpRequestService, configurationFilePath);
     }
 
-    public VisitedLocationTMP getUserLocation(UUID userId) throws IOException, JSONException, ParseException {
-        VisitedLocationTMP result = null;
+    public VisitedLocation getUserLocation(UUID userId) throws IOException, JSONException, ParseException {
+        VisitedLocation result = null;
 
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("userId", userId.toString());
@@ -48,8 +46,8 @@ public class GpsUtilService extends ExternalApiService {
                 );
 
                 JSONObject locationJson = content.getJSONObject("location");
-                LocationTMP location = new LocationTMP(locationJson.getDouble("latitude"), locationJson.getDouble("longitude"));
-                result = new VisitedLocationTMP(
+                Location location = new Location(locationJson.getDouble("latitude"), locationJson.getDouble("longitude"));
+                result = new VisitedLocation(
                     userId,
                     location,
                     Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant())
@@ -59,8 +57,8 @@ public class GpsUtilService extends ExternalApiService {
         return result;
     }
 
-    public List<AttractionTMP> getAttractions() throws IOException, JSONException {
-        List<AttractionTMP> attractionList = null;
+    public List<Attraction> getAttractions() throws IOException, JSONException {
+        List<Attraction> attractionList = null;
 
         JSONObject data = super.httpRequestService.getReq(super.getApiServerUrl("gpsutil.host") + "/getAttractions", null);
         if (data != null) {
@@ -70,7 +68,7 @@ public class GpsUtilService extends ExternalApiService {
                 JSONArray content = (JSONArray) data.get("content");
                 for (int i = 0; i < content.length(); i++) {
                     JSONObject attractionJson = content.getJSONObject(i);
-                    AttractionTMP attraction = new AttractionTMP(
+                    Attraction attraction = new Attraction(
                             attractionJson.getString("attractionName"),
                             attractionJson.getString("city"),
                             attractionJson.getString("state"),

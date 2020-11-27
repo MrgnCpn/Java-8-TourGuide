@@ -1,19 +1,17 @@
 package tourGuide;
 
-import gpsUtil.GpsUtil;
-import gpsUtil.location.Attraction;
-import gpsUtil.location.VisitedLocation;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
-import rewardCentral.RewardCentral;
 import tourGuide.helper.InternalTestHelper;
-import tourGuide.service.RewardsService;
-import tourGuide.service.TourGuideService;
+import tourGuide.models.Attraction;
+import tourGuide.models.Provider;
 import tourGuide.models.User;
-import tripPricer.Provider;
+import tourGuide.models.VisitedLocation;
+import tourGuide.service.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -24,8 +22,12 @@ import java.util.concurrent.Executors;
 import static org.junit.Assert.*;
 
 public class TestTourGuideService {
+	private String configurationFilePath = "src/main/resources/application.properties";
 	private ExecutorService executorService;
-	private GpsUtil gpsUtil;
+	private HTTPRequestService httpRequestService;
+	private GpsUtilService gpsUtilService;
+	private TripPricerService tripPricerService;
+	private RewardCentralService rewardCentralService;
 	private RewardsService rewardsService;
 	private TourGuideService tourGuideService;
 	private User user;
@@ -33,10 +35,13 @@ public class TestTourGuideService {
 
 	private void initTest(Integer internalUser){
 		executorService = Executors.newFixedThreadPool(1000);
-		gpsUtil = new GpsUtil();
-		rewardsService = new RewardsService(gpsUtil, new RewardCentral(), executorService);
+		httpRequestService = new HTTPRequestService();
+		tripPricerService = new TripPricerService(httpRequestService, configurationFilePath);
+		rewardCentralService = new RewardCentralService(httpRequestService, configurationFilePath);
+		gpsUtilService = new GpsUtilService(httpRequestService, configurationFilePath);
+		rewardsService = new RewardsService(gpsUtilService, rewardCentralService, executorService);
 		InternalTestHelper.setInternalUserNumber(internalUser);
-		tourGuideService = new TourGuideService(gpsUtil, rewardsService, executorService);
+		tourGuideService = new TourGuideService(gpsUtilService, rewardsService, tripPricerService, executorService);
 		user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
 	}
@@ -44,7 +49,7 @@ public class TestTourGuideService {
 	private void undefTest(){
 		executorService.shutdown();
 		executorService = null;
-		gpsUtil = null;
+		gpsUtilService = null;
 		rewardsService = null;
 		tourGuideService = null;
 		user = null;
@@ -95,7 +100,7 @@ public class TestTourGuideService {
 	}
 	
 	@Test
-	public void getNearbyAttractions() throws ExecutionException, InterruptedException {
+	public void getNearbyAttractions() throws ExecutionException, InterruptedException, IOException, JSONException {
 		initTest(0);
 		VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user).get();
 		List<Attraction> attractions = tourGuideService.getNearbyAttractions(visitedLocation);
@@ -105,7 +110,7 @@ public class TestTourGuideService {
 	}
 
 	@Test
-	public void getTripDeals() {
+	public void getTripDeals() throws IOException, JSONException {
 		initTest(0);
 		List<Provider> providers = tourGuideService.getTripDeals(user);
 		tourGuideService.tracker.stopTracking();
@@ -142,7 +147,7 @@ public class TestTourGuideService {
 	}
 
 	@Test
-	public void getFiveClosestAttractionJSON() throws ExecutionException, InterruptedException, JSONException {
+	public void getFiveClosestAttractionJSON() throws ExecutionException, InterruptedException, JSONException, IOException {
 		initTest(1);
 		String result = tourGuideService.getFiveClosestAttractionJSON(tourGuideService.getAllUsers().get(0));
 

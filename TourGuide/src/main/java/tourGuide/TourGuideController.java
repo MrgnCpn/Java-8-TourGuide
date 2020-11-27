@@ -1,6 +1,7 @@
 package tourGuide;
 
 import com.jsoniter.output.JsonStream;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tourGuide.service.TourGuideService;
 import tourGuide.models.User;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -36,7 +38,7 @@ public class TourGuideController {
         // The reward points for visiting each Attraction.
         //    Note: Attraction reward points can be gathered from RewardsCentral
     @RequestMapping("/getNearbyAttractions") 
-    public String getNearbyAttractions(@RequestParam String userName) throws ExecutionException, InterruptedException {
+    public String getNearbyAttractions(@RequestParam String userName) throws ExecutionException, InterruptedException, IOException, JSONException {
     	return tourGuideService.getFiveClosestAttractionJSON(getUser(userName));
     }
     
@@ -60,7 +62,7 @@ public class TourGuideController {
     }
     
     @RequestMapping("/getTripDeals")
-    public String getTripDeals(@RequestParam String userName) {
+    public String getTripDeals(@RequestParam String userName) throws IOException, JSONException {
     	return JsonStream.serialize(tourGuideService.getTripDeals(getUser(userName)));
     }
     

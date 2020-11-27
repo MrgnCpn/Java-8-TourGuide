@@ -1,14 +1,10 @@
 package tourGuide.service;
 
-import gpsUtil.GpsUtil;
-import gpsUtil.location.Attraction;
-import gpsUtil.location.Location;
-import gpsUtil.location.VisitedLocation;
+import org.json.JSONException;
 import org.springframework.stereotype.Service;
-import rewardCentral.RewardCentral;
-import tourGuide.models.User;
-import tourGuide.models.UserReward;
+import tourGuide.models.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -22,13 +18,13 @@ public class RewardsService {
     private int defaultProximityBuffer = 10;
 	private int proximityBuffer = defaultProximityBuffer;
 	private int attractionProximityRange = 200;
-	private final GpsUtil gpsUtil;
-	private final RewardCentral rewardsCentral;
+	private final GpsUtilService gpsUtilService;
+	private final RewardCentralService rewardCentralService;
 	private ExecutorService executorService;
 	
-	public RewardsService(GpsUtil gpsUtil, RewardCentral rewardCentral, ExecutorService executorService) {
-		this.gpsUtil = gpsUtil;
-		this.rewardsCentral = rewardCentral;
+	public RewardsService(GpsUtilService gpsUtilService, RewardCentralService rewardCentralService, ExecutorService executorService) {
+		this.gpsUtilService = gpsUtilService;
+		this.rewardCentralService = rewardCentralService;
 		this.executorService = executorService;
 	}
 	
@@ -40,9 +36,9 @@ public class RewardsService {
 		proximityBuffer = defaultProximityBuffer;
 	}
 	
-	public void calculateRewards(User user) {
+	public void calculateRewards(User user) throws IOException, JSONException {
 		List<VisitedLocation> userLocations = user.getVisitedLocations();
-		List<Attraction> attractions = gpsUtil.getAttractions();
+		List<Attraction> attractions = gpsUtilService.getAttractions();
 
 		for(VisitedLocation visitedLocation : userLocations) {
 			for(Attraction attraction : attractions) {
@@ -55,7 +51,15 @@ public class RewardsService {
 	}
 
 	public CompletableFuture<Void> calculateRewardAsync(User user){
-		return CompletableFuture.runAsync(() -> this.calculateRewards(user), this.executorService);
+		return CompletableFuture.runAsync(() -> {
+			try {
+				this.calculateRewards(user);
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}, this.executorService);
 	}
 
 	public CompletableFuture<List<Void>> calculateUsersListReward(List<User> usersList){
@@ -83,8 +87,8 @@ public class RewardsService {
 		return !(getDistance(attraction, visitedLocation.location) > proximityBuffer);
 	}
 	
-	public int getRewardPoints(Attraction attraction, User user) {
-		return rewardsCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
+	public int getRewardPoints(Attraction attraction, User user) throws IOException, JSONException {
+		return rewardCentralService.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
 	}
 	
 	public double getDistance(Location loc1, Location loc2) {

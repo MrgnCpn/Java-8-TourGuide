@@ -1,14 +1,8 @@
 package tourGuide;
 
-import gpsUtil.location.Attraction;
-import gpsUtil.location.Location;
-import gpsUtil.location.VisitedLocation;
 import org.javamoney.moneta.Money;
 import org.junit.Test;
-import tourGuide.models.User;
-import tourGuide.models.UserPreferences;
-import tourGuide.models.UserReward;
-import tripPricer.Provider;
+import tourGuide.models.*;
 
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;

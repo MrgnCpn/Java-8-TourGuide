@@ -5,7 +5,6 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -15,7 +14,6 @@ import java.util.StringJoiner;
 /**
  * @author MorganCpn
  */
-
 public class HTTPRequestService {
 
     public HTTPRequestService() { }
@@ -28,8 +26,8 @@ public class HTTPRequestService {
         con.setRequestMethod("GET");
         con.setDoOutput(true);
         con.setRequestProperty("Content-Type", "application/json");
-        con.setConnectTimeout(1000);
-        con.setReadTimeout(1500);
+        con.setConnectTimeout(20000);
+        con.setReadTimeout(20000);
         String res = this.getResponse(con);
         con.disconnect();
         return new JSONObject(res);
@@ -46,8 +44,8 @@ public class HTTPRequestService {
         HttpURLConnection con = (HttpURLConnection) reqUrl.openConnection();
         con.setRequestMethod("POST");
         con.setDoOutput(true);
-        con.setConnectTimeout(1000);
-        con.setReadTimeout(1500);
+        con.setConnectTimeout(20000);
+        con.setReadTimeout(20000);
         con.setFixedLengthStreamingMode(out.length);
         con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
         con.connect();

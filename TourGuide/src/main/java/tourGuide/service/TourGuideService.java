@@ -1,19 +1,15 @@
 package tourGuide.service;
 
-import gpsUtil.GpsUtil;
-import gpsUtil.location.Attraction;
-import gpsUtil.location.Location;
-import gpsUtil.location.VisitedLocation;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import tourGuide.helper.InternalTestHelper;
-import tourGuide.models.User;
-import tourGuide.models.UserReward;
+import tourGuide.models.*;
 import tourGuide.tracker.Tracker;
-import tripPricer.Provider;
-import tripPricer.TripPricer;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
@@ -26,16 +22,17 @@ import java.util.stream.IntStream;
 @Service
 public class TourGuideService {
 	private Logger logger = LoggerFactory.getLogger(TourGuideService.class);
-	private final GpsUtil gpsUtil;
+	private final GpsUtilService gpsUtilService;
 	private final RewardsService rewardsService;
-	private final TripPricer tripPricer = new TripPricer();
+	private final TripPricerService tripPricerService;
 	public final Tracker tracker;
 	boolean testMode = true;
 	private ExecutorService executorService;
 	
-	public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService, ExecutorService executorService) {
-		this.gpsUtil = gpsUtil;
+	public TourGuideService(GpsUtilService gpsUtilService, RewardsService rewardsService, TripPricerService tripPricerService, ExecutorService executorService) {
+		this.gpsUtilService = gpsUtilService;
 		this.rewardsService = rewardsService;
+		this.tripPricerService = tripPricerService;
 		this.executorService = executorService;
 		if(testMode) {
 			logger.info("TestMode enabled");
@@ -72,9 +69,9 @@ public class TourGuideService {
 		}
 	}
 	
-	public List<Provider> getTripDeals(User user) {
+	public List<Provider> getTripDeals(User user) throws IOException, JSONException {
 		int cumulatativeRewardPoints = user.getUserRewards().stream().mapToInt(i -> i.getRewardPoints()).sum();
-		List<Provider> providers = tripPricer.getPrice(tripPricerApiKey, user.getUserId(), user.getUserPreferences().getNumberOfAdults(), 
+		List<Provider> providers = tripPricerService.getPrice(tripPricerApiKey, user.getUserId(), user.getUserPreferences().getNumberOfAdults(),
 				user.getUserPreferences().getNumberOfChildren(), user.getUserPreferences().getTripDuration(), cumulatativeRewardPoints);
 		user.setTripDeals(providers);
 		return providers;
@@ -82,9 +79,24 @@ public class TourGuideService {
 	
 	public CompletableFuture<VisitedLocation> trackUserLocation(User user) {
 		return CompletableFuture.supplyAsync(() -> {
-			VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
+			VisitedLocation visitedLocation = null;
+			try {
+				visitedLocation = gpsUtilService.getUserLocation(user.getUserId());
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 			user.addToVisitedLocations(visitedLocation);
-			rewardsService.calculateRewards(user);
+			try {
+				rewardsService.calculateRewards(user);
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 			return visitedLocation;
 		}, executorService);
 	}
@@ -106,11 +118,11 @@ public class TourGuideService {
 		);
 	}
 
-	public List<Attraction> getNearbyAttractions(VisitedLocation visitedLocation) {
+	public List<Attraction> getNearbyAttractions(VisitedLocation visitedLocation) throws IOException, JSONException {
 		List<Attraction> nearbyAttractions = new ArrayList<>();
 		Map<Double, Attraction> attractionMap = new HashMap<>();
 
-		gpsUtil.getAttractions().stream().forEach(a -> attractionMap.put(rewardsService.getDistance(a, visitedLocation.location), a));
+		gpsUtilService.getAttractions().stream().forEach(a -> attractionMap.put(rewardsService.getDistance(a, visitedLocation.location), a));
 
 		int i = 5;
 		for (Map.Entry<Double, Attraction> entry : new TreeMap<>(attractionMap).entrySet()) {
@@ -123,7 +135,7 @@ public class TourGuideService {
 		return nearbyAttractions;
 	}
 
-	public String getFiveClosestAttractionJSON(User user) throws ExecutionException, InterruptedException {
+	public String getFiveClosestAttractionJSON(User user) throws ExecutionException, InterruptedException, IOException, JSONException {
 		VisitedLocation userLocation = getUserLocation(user);
 		List<Attraction> closestAttractionsLists = getNearbyAttractions(userLocation);
 		StringBuffer result = new StringBuffer();
@@ -141,8 +153,14 @@ public class TourGuideService {
 						res.append("\"city\" : \"").append(a.city).append("\",");
 						res.append("\"state\" : \"").append(a.state).append("\",");
 						res.append("\"distance\" : ").append(rewardsService.getDistance(userLocation.location, a)).append(",");
+					try {
 						res.append("\"reward\" : ").append(rewardsService.getRewardPoints(a, user)).append("}");
-						return res.toString();
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					return res.toString();
 					}, executorService)).collect(Collectors.toList()
 				);
 

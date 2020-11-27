@@ -3,7 +3,7 @@ package tourGuide.service;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import tourGuide.models.ProviderTMP;
+import tourGuide.models.Provider;
 
 import java.io.IOException;
 import java.util.*;
@@ -19,8 +19,8 @@ public class TripPricerService extends ExternalApiService {
         super(httpRequestService, configurationFilePath);
     }
 
-    public List<ProviderTMP> getPrice(String apiKey, UUID attractionId, int adults, int children, int nightsStay, int rewardsPoints) throws JSONException, IOException {
-        List<ProviderTMP> result = null;
+    public List<Provider> getPrice(String apiKey, UUID attractionId, int adults, int children, int nightsStay, int rewardsPoints) throws JSONException, IOException {
+        List<Provider> result = null;
 
         Map<String, String> postParams = new HashMap<>();
         postParams.put("apiKey", apiKey);
@@ -38,7 +38,7 @@ public class TripPricerService extends ExternalApiService {
                 JSONArray content = (JSONArray) data.get("content");
                 for (int i = 0; i < content.length(); i++) {
                     JSONObject providerJson = content.getJSONObject(i);
-                    ProviderTMP provider = new ProviderTMP(
+                    Provider provider = new Provider(
                         UUID.fromString(providerJson.getString("tripId")),
                         providerJson.getString("name"),
                         providerJson.getDouble("price")
