@@ -6,8 +6,8 @@ import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import org.springframework.stereotype.Service;
 import rewardCentral.RewardCentral;
-import tourGuide.user.User;
-import tourGuide.user.UserReward;
+import tourGuide.models.User;
+import tourGuide.models.UserReward;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

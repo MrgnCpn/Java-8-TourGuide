@@ -9,7 +9,7 @@ import rewardCentral.RewardCentral;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
-import tourGuide.user.User;
+import tourGuide.models.User;
 
 import java.util.Date;
 import java.util.List;

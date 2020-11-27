@@ -5,9 +5,9 @@ import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import org.javamoney.moneta.Money;
 import org.junit.Test;
-import tourGuide.user.User;
-import tourGuide.user.UserPreferences;
-import tourGuide.user.UserReward;
+import tourGuide.models.User;
+import tourGuide.models.UserPreferences;
+import tourGuide.models.UserReward;
 import tripPricer.Provider;
 
 import javax.money.CurrencyUnit;
