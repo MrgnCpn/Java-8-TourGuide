@@ -1,9 +1,10 @@
 package com.tripmaster.rewardcentral;
 
-import com.jsoniter.output.JsonStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import rewardCentral.RewardCentral;
 
 import java.util.UUID;
@@ -16,12 +17,11 @@ public class RewardCentralController {
     @GetMapping("/getAttractionRewardPoints")
     public String getAttractionRewardPoints(@RequestParam(required = true) String userId, String attractionId) {
         if (!StringUtils.isEmpty(userId) && !StringUtils.isEmpty(attractionId)) {
-            return JsonStream.serialize(
-                    rewardCentral.getAttractionRewardPoints(
-                            UUID.fromString(userId),
-                            UUID.fromString(attractionId)
-                    )
-            );
+            StringBuilder result = new StringBuilder();
+            result.append("\"")
+                  .append(rewardCentral.getAttractionRewardPoints(UUID.fromString(userId), UUID.fromString(attractionId)))
+                  .append("\"");
+            return result.toString();
         }
         return null;
     }

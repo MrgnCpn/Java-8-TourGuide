@@ -1,5 +1,19 @@
 package tourGuide.service;
 
+import gpsUtil.GpsUtil;
+import gpsUtil.location.Attraction;
+import gpsUtil.location.Location;
+import gpsUtil.location.VisitedLocation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import tourGuide.helper.InternalTestHelper;
+import tourGuide.models.User;
+import tourGuide.models.UserReward;
+import tourGuide.tracker.Tracker;
+import tripPricer.Provider;
+import tripPricer.TripPricer;
+
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
@@ -8,21 +22,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
-import gpsUtil.GpsUtil;
-import gpsUtil.location.Attraction;
-import gpsUtil.location.Location;
-import gpsUtil.location.VisitedLocation;
-import tourGuide.helper.InternalTestHelper;
-import tourGuide.tracker.Tracker;
-import tourGuide.models.User;
-import tourGuide.models.UserReward;
-import tripPricer.Provider;
-import tripPricer.TripPricer;
 
 @Service
 public class TourGuideService {

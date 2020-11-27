@@ -2,30 +2,27 @@ package tourGuide.service;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+
+import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.StringJoiner;
 
 /**
  * @author MorganCpn
  */
 
-public class HTTPRequestService implements HTTPRequestServiceInterface {
+public class HTTPRequestService {
 
     public HTTPRequestService() { }
 
-    /**
-     * @see HTTPRequestServiceInterface {@link #getReq(String, Map)}
-     */
-    @Override
-    public JSONObject getReq(String url, Map<String, String> params) throws IOException, JSONException {
+    public JSONObject getReq(String url, Map<String, String> urlParams) throws IOException, JSONException {
         StringBuilder urlWithParams = new StringBuilder();
-        urlWithParams.append(url).append(this.getURLParamsString(params));
+        urlWithParams.append(url).append(this.getURLParamsString(urlParams));
         URL reqUrl = new URL(urlWithParams.toString());
         HttpURLConnection con = (HttpURLConnection) reqUrl.openConnection();
         con.setRequestMethod("GET");
@@ -33,6 +30,30 @@ public class HTTPRequestService implements HTTPRequestServiceInterface {
         con.setRequestProperty("Content-Type", "application/json");
         con.setConnectTimeout(1000);
         con.setReadTimeout(1500);
+        String res = this.getResponse(con);
+        con.disconnect();
+        return new JSONObject(res);
+    }
+
+    public JSONObject postFormReq(String url, Map<String, String> formParams) throws IOException, JSONException {
+        StringJoiner sj = new StringJoiner("&");
+        for(Map.Entry<String,String> entry : formParams.entrySet())
+            sj.add(URLEncoder.encode(entry.getKey(), "UTF-8") + "="
+                    + URLEncoder.encode(entry.getValue(), "UTF-8"));
+        byte[] out = sj.toString().getBytes(StandardCharsets.UTF_8);
+
+        URL reqUrl = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) reqUrl.openConnection();
+        con.setRequestMethod("POST");
+        con.setDoOutput(true);
+        con.setConnectTimeout(1000);
+        con.setReadTimeout(1500);
+        con.setFixedLengthStreamingMode(out.length);
+        con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+        con.connect();
+        try(OutputStream os = con.getOutputStream()) {
+            os.write(out);
+        }
         String res = this.getResponse(con);
         con.disconnect();
         return new JSONObject(res);
@@ -47,7 +68,7 @@ public class HTTPRequestService implements HTTPRequestServiceInterface {
     private static String getURLParamsString(Map<String, String> params) throws UnsupportedEncodingException {
         StringBuilder result = new StringBuilder();
 
-        if (params != null && params.size() > 1) {
+        if (params != null && params.size() >= 1) {
             result.append("?");
             for (Map.Entry<String, String> entry : params.entrySet()) {
                 result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
