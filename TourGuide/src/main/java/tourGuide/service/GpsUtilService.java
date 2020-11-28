@@ -1,5 +1,7 @@
 package tourGuide.service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,6 +16,11 @@ import java.time.ZoneId;
 import java.util.*;
 
 public class GpsUtilService extends ExternalApiService {
+
+    /**
+     * Logger log4j2
+     */
+    private static final Logger logger = LogManager.getLogger("GpsUtilService");
 
     /**
      * Constructor
@@ -34,10 +41,11 @@ public class GpsUtilService extends ExternalApiService {
      */
     public VisitedLocation getUserLocation(UUID userId) throws IOException, JSONException, ParseException {
         VisitedLocation result = null;
+        String url = super.getApiServerUrl("gpsutil.host") + "/getUserLocation";
 
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("userId", userId.toString());
-        JSONObject data = super.httpRequestService.getReq(super.getApiServerUrl("gpsutil.host") + "/getUserLocation", urlParams);
+        JSONObject data = super.httpRequestService.getReq(url, urlParams);
         if (data != null) {
             Integer status = data.getInt("status");
             if (status < 299) {
@@ -60,7 +68,11 @@ public class GpsUtilService extends ExternalApiService {
                     location,
                     Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant())
                 );
+            } else {
+                logger.error("Api Request Error : " + url + ", status : " + status);
             }
+        } else {
+            logger.error("Api Request Error : " + url + ", no data");
         }
         return result;
     }
@@ -73,8 +85,9 @@ public class GpsUtilService extends ExternalApiService {
      */
     public List<Attraction> getAttractions() throws IOException, JSONException {
         List<Attraction> attractionList = null;
+        String url = super.getApiServerUrl("gpsutil.host") + "/getAttractions";
 
-        JSONObject data = super.httpRequestService.getReq(super.getApiServerUrl("gpsutil.host") + "/getAttractions", null);
+        JSONObject data = super.httpRequestService.getReq(url, null);
         if (data != null) {
             Integer status = data.getInt("status");
             if (status < 299) {
@@ -91,7 +104,11 @@ public class GpsUtilService extends ExternalApiService {
                     );
                     attractionList.add(attraction);
                 }
+            } else {
+                logger.error("Api Request Error : " + url + ", status : " + status);
             }
+        } else {
+            logger.error("Api Request Error : " + url + ", no data");
         }
         return attractionList;
     }

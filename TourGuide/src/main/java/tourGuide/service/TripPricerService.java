@@ -1,5 +1,7 @@
 package tourGuide.service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,6 +11,11 @@ import java.io.IOException;
 import java.util.*;
 
 public class TripPricerService extends ExternalApiService {
+
+    /**
+     * Logger log4j2
+     */
+    private static final Logger logger = LogManager.getLogger("TripPricerService");
 
     /**
      * Constructor
@@ -33,6 +40,7 @@ public class TripPricerService extends ExternalApiService {
      */
     public List<Provider> getPrice(String apiKey, UUID attractionId, int adults, int children, int nightsStay, int rewardsPoints) throws JSONException, IOException {
         List<Provider> result = null;
+        String url = super.getApiServerUrl("trippricer.host") + "/getPrice";
 
         Map<String, String> postParams = new HashMap<>();
         postParams.put("apiKey", apiKey);
@@ -42,7 +50,7 @@ public class TripPricerService extends ExternalApiService {
         postParams.put("nightsStay", String.valueOf(nightsStay));
         postParams.put("rewardsPoints", String.valueOf(rewardsPoints));
 
-        JSONObject data = super.httpRequestService.postFormReq(super.getApiServerUrl("trippricer.host") + "/getPrice", postParams);
+        JSONObject data = super.httpRequestService.postFormReq(url, postParams);
         if (data != null) {
             result = new ArrayList<>();
             Integer status = data.getInt("status");
@@ -57,7 +65,11 @@ public class TripPricerService extends ExternalApiService {
                     );
                     result.add(provider);
                 }
+            } else {
+                logger.error("Api Request Error : " + url + ", status : " + status);
             }
+        } else {
+            logger.error("Api Request Error : " + url + ", no data");
         }
         return result;
     }
