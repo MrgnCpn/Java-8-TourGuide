@@ -19,6 +19,18 @@ public class TripPricerService extends ExternalApiService {
         super(httpRequestService, configurationFilePath);
     }
 
+    /**
+     * Get user price plan from TripPricer API
+     * @param apiKey
+     * @param attractionId
+     * @param adults
+     * @param children
+     * @param nightsStay
+     * @param rewardsPoints
+     * @return
+     * @throws JSONException
+     * @throws IOException
+     */
     public List<Provider> getPrice(String apiKey, UUID attractionId, int adults, int children, int nightsStay, int rewardsPoints) throws JSONException, IOException {
         List<Provider> result = null;
 

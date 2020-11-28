@@ -35,7 +35,13 @@ public class RewardsService {
 	public void setDefaultProximityBuffer() {
 		proximityBuffer = defaultProximityBuffer;
 	}
-	
+
+	/**
+	 * Calculate User Reward
+	 * @param user
+	 * @throws IOException
+	 * @throws JSONException
+	 */
 	public void calculateRewards(User user) throws IOException, JSONException {
 		List<VisitedLocation> userLocations = user.getVisitedLocations();
 		List<Attraction> attractions = gpsUtilService.getAttractions();
@@ -50,6 +56,11 @@ public class RewardsService {
 		}
 	}
 
+	/**
+	 * Calculate User reward Asynchronously
+	 * @param user
+	 * @return
+	 */
 	public CompletableFuture<Void> calculateRewardAsync(User user){
 		return CompletableFuture.runAsync(() -> {
 			try {
@@ -62,6 +73,11 @@ public class RewardsService {
 		}, this.executorService);
 	}
 
+	/**
+	 * Calculate Users reward Asynchronously
+	 * @param usersList
+	 * @return
+	 */
 	public CompletableFuture<List<Void>> calculateUsersListReward(List<User> usersList){
 		List<CompletableFuture<Void>> allCalculatedRewardFutures = usersList
 				.stream()
@@ -78,11 +94,23 @@ public class RewardsService {
 				.collect(Collectors.toList())
 		);
 	}
-	
+
+	/**
+	 * Get if Attraction is near of location
+	 * @param attraction
+	 * @param location
+	 * @return
+	 */
 	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
 		return !(getDistance(attraction, location) > attractionProximityRange);
 	}
-	
+
+	/**
+	 * Get if Attraction is near of visitedLocation
+	 * @param visitedLocation
+	 * @param attraction
+	 * @return
+	 */
 	private boolean nearAttraction(VisitedLocation visitedLocation, Attraction attraction) {
 		return !(getDistance(attraction, visitedLocation.location) > proximityBuffer);
 	}

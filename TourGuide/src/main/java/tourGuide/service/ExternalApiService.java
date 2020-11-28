@@ -25,11 +25,21 @@ public class ExternalApiService {
      */
     private String configurationFilePath;
 
+    /**
+     * Constructor
+     * @param httpRequestService
+     * @param configurationFilePath
+     */
     public ExternalApiService(HTTPRequestService httpRequestService, String configurationFilePath) {
         this.httpRequestService = httpRequestService;
         this.configurationFilePath = configurationFilePath;
     }
 
+    /**
+     * Get host server URL from properties file
+     * @param param
+     * @return
+     */
     public String getApiServerUrl(String param){
         String serverUrl = "";
         try (InputStream inputStream = new FileInputStream(configurationFilePath)){

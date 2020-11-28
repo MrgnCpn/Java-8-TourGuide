@@ -15,6 +15,14 @@ public class TripPricerTask implements Callable<List<Provider>> {
     private final int nightsStay;
     private TripPricerService tripPricerService;
 
+    /**
+     * Constructor
+     * @param apiKey
+     * @param attractionId
+     * @param adults
+     * @param children
+     * @param nightsStay
+     */
     public TripPricerTask(String apiKey, UUID attractionId, int adults, int children, int nightsStay) {
         this.apiKey = apiKey;
         this.attractionId = attractionId;
@@ -24,6 +32,11 @@ public class TripPricerTask implements Callable<List<Provider>> {
         this.tripPricerService = new TripPricerService(new HTTPRequestService(), "src/main/resources/application.properties");
     }
 
+    /**
+     * Get Price for TripPricer Api
+     * @return
+     * @throws Exception
+     */
     public List<Provider> call() throws Exception {
         return tripPricerService.getPrice(this.apiKey, this.attractionId, this.adults, this.children, this.nightsStay, 5);
     }

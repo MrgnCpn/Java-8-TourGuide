@@ -8,6 +8,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class HttpTraceActuatorConfiguration {
 
+    /**
+     * Actuactor HttpTrace
+     * @return
+     */
     @Bean
     public HttpTraceRepository httpTraceRepository() {
         return new InMemoryHttpTraceRepository();

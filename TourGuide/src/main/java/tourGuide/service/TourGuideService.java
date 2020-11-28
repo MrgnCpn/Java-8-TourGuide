@@ -28,7 +28,14 @@ public class TourGuideService {
 	public final Tracker tracker;
 	boolean testMode = true;
 	private ExecutorService executorService;
-	
+
+	/**
+	 * Constructor
+	 * @param gpsUtilService
+	 * @param rewardsService
+	 * @param tripPricerService
+	 * @param executorService
+	 */
 	public TourGuideService(GpsUtilService gpsUtilService, RewardsService rewardsService, TripPricerService tripPricerService, ExecutorService executorService) {
 		this.gpsUtilService = gpsUtilService;
 		this.rewardsService = rewardsService;
@@ -43,7 +50,7 @@ public class TourGuideService {
 		tracker = new Tracker(this);
 		addShutDownHook();
 	}
-	
+
 	public List<UserReward> getUserRewards(User user) {
 		return user.getUserRewards();
 	}
@@ -54,21 +61,40 @@ public class TourGuideService {
 			trackUserLocation(user).get();
 		return visitedLocation;
 	}
-	
+
+	/**
+	 * Get user by usernmae
+	 * @param userName
+	 * @return
+	 */
 	public User getUser(String userName) {
 		return internalUserMap.get(userName);
 	}
-	
+
+	/**
+	 * Get All users
+	 * @return
+	 */
 	public List<User> getAllUsers() {
 		return new ArrayList<>(internalUserMap.values());
 	}
-	
+
+	/**
+	 * Add User to the list
+	 */
 	public void addUser(User user) {
 		if(!internalUserMap.containsKey(user.getUserName())) {
 			internalUserMap.put(user.getUserName(), user);
 		}
 	}
-	
+
+	/**
+	 * Get Trip Deal
+	 * @param user
+	 * @return
+	 * @throws IOException
+	 * @throws JSONException
+	 */
 	public List<Provider> getTripDeals(User user) throws IOException, JSONException {
 		int cumulatativeRewardPoints = user.getUserRewards().stream().mapToInt(i -> i.getRewardPoints()).sum();
 		List<Provider> providers = tripPricerService.getPrice(tripPricerApiKey, user.getUserId(), user.getUserPreferences().getNumberOfAdults(),
@@ -76,7 +102,12 @@ public class TourGuideService {
 		user.setTripDeals(providers);
 		return providers;
 	}
-	
+
+	/**
+	 * Track User location asynchronously, get user location and calculate reward
+	 * @param user
+	 * @return
+	 */
 	public CompletableFuture<VisitedLocation> trackUserLocation(User user) {
 		return CompletableFuture.supplyAsync(() -> {
 			VisitedLocation visitedLocation = null;
@@ -101,6 +132,11 @@ public class TourGuideService {
 		}, executorService);
 	}
 
+	/**
+	 * Track Users location asynchronously, get users location and calculate reward
+	 * @param usersList
+	 * @return
+	 */
 	public CompletableFuture<List<VisitedLocation>> getLocationsFromUserList(List<User> usersList){
 		List<CompletableFuture<VisitedLocation>> allVisitedLocationFutures = usersList
 				.stream()
@@ -118,6 +154,13 @@ public class TourGuideService {
 		);
 	}
 
+	/**
+	 * Get 5 nearest attraction of a location
+	 * @param visitedLocation
+	 * @return list attractions
+	 * @throws IOException
+	 * @throws JSONException
+	 */
 	public List<Attraction> getNearbyAttractions(VisitedLocation visitedLocation) throws IOException, JSONException {
 		List<Attraction> nearbyAttractions = new ArrayList<>();
 		Map<Double, Attraction> attractionMap = new HashMap<>();
@@ -135,6 +178,15 @@ public class TourGuideService {
 		return nearbyAttractions;
 	}
 
+	/**
+	 * Get 5 nearest attraction of a location and construct JSON response
+	 * @param user
+	 * @return
+	 * @throws ExecutionException
+	 * @throws InterruptedException
+	 * @throws IOException
+	 * @throws JSONException
+	 */
 	public String getFiveClosestAttractionJSON(User user) throws ExecutionException, InterruptedException, IOException, JSONException {
 		VisitedLocation userLocation = getUserLocation(user);
 		List<Attraction> closestAttractionsLists = getNearbyAttractions(userLocation);
@@ -187,12 +239,20 @@ public class TourGuideService {
 		    });
 	}
 
+	/**
+	 * Return all users LastVisitedLocation
+	 * @return list of locations
+	 */
 	public List<VisitedLocation> getAllUsersLocations(){
 		List<VisitedLocation> usersLocationsList = new ArrayList<>();
 		this.getAllUsers().stream().forEach(u -> usersLocationsList.add(u.getLastVisitedLocation()));
 		return usersLocationsList;
 	}
 
+	/**
+	 * Return all users LastVisitedLocation and construct JSON response
+	 * @return JSON response
+	 */
 	public String getAllUsersLocationsJSON(){
 		List<VisitedLocation> allUsersLocations = getAllUsersLocations();
 		StringBuffer result = new StringBuffer();

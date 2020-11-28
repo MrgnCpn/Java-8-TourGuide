@@ -24,6 +24,14 @@ public class GpsUtilService extends ExternalApiService {
         super(httpRequestService, configurationFilePath);
     }
 
+    /**
+     * Get User Location
+     * @param userId
+     * @return
+     * @throws IOException
+     * @throws JSONException
+     * @throws ParseException
+     */
     public VisitedLocation getUserLocation(UUID userId) throws IOException, JSONException, ParseException {
         VisitedLocation result = null;
 
@@ -57,6 +65,12 @@ public class GpsUtilService extends ExternalApiService {
         return result;
     }
 
+    /**
+     * Get All Attraction of GPSUtil Api
+     * @return
+     * @throws IOException
+     * @throws JSONException
+     */
     public List<Attraction> getAttractions() throws IOException, JSONException {
         List<Attraction> attractionList = null;
 

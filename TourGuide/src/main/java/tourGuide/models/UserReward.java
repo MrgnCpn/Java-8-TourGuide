@@ -6,12 +6,23 @@ public class UserReward {
 	public final Attraction attraction;
 	private int rewardPoints;
 
+	/**
+	 * Constructor
+	 * @param visitedLocation
+	 * @param attraction
+	 * @param rewardPoints
+	 */
 	public UserReward(VisitedLocation visitedLocation, Attraction attraction, int rewardPoints) {
 		this.visitedLocation = visitedLocation;
 		this.attraction = attraction;
 		this.rewardPoints = rewardPoints;
 	}
-	
+
+	/**
+	 * Constructor
+	 * @param visitedLocation
+	 * @param attraction
+	 */
 	public UserReward(VisitedLocation visitedLocation, Attraction attraction) {
 		this.visitedLocation = visitedLocation;
 		this.attraction = attraction;

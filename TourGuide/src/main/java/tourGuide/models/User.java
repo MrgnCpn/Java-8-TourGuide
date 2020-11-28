@@ -16,6 +16,13 @@ public class User {
 	private UserPreferences userPreferences = new UserPreferences();
 	private List<Provider> tripDeals = new ArrayList<>();
 
+	/**
+	 * Constructor
+	 * @param userId
+	 * @param userName
+	 * @param phoneNumber
+	 * @param emailAddress
+	 */
 	public User(UUID userId, String userName, String phoneNumber, String emailAddress) {
 		this.userId = userId;
 		this.userName = userName;

@@ -7,6 +7,12 @@ public class Provider {
     public final double price;
     public final UUID tripId;
 
+    /**
+     * Constructor
+     * @param tripId
+     * @param name
+     * @param price
+     */
     public Provider(UUID tripId, String name, double price) {
         this.name = name;
         this.tripId = tripId;

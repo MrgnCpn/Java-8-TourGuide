@@ -15,7 +15,10 @@ public class UserPreferences {
 	private int ticketQuantity = 1;
 	private int numberOfAdults = 1;
 	private int numberOfChildren = 0;
-	
+
+	/**
+	 * Constructor
+	 */
 	public UserPreferences() {
 	}
 	

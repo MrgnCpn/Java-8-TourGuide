@@ -16,8 +16,19 @@ import java.util.StringJoiner;
  */
 public class HTTPRequestService {
 
+    /**
+     * Constructor
+     */
     public HTTPRequestService() { }
 
+    /**
+     * Api GET request
+     * @param url
+     * @param urlParams
+     * @return JSON api response
+     * @throws IOException
+     * @throws JSONException
+     */
     public JSONObject getReq(String url, Map<String, String> urlParams) throws IOException, JSONException {
         StringBuilder urlWithParams = new StringBuilder();
         urlWithParams.append(url).append(this.getURLParamsString(urlParams));
@@ -33,6 +44,14 @@ public class HTTPRequestService {
         return new JSONObject(res);
     }
 
+    /**
+     * Api POST request with a form
+     * @param url
+     * @param formParams
+     * @return JSON api response
+     * @throws IOException
+     * @throws JSONException
+     */
     public JSONObject postFormReq(String url, Map<String, String> formParams) throws IOException, JSONException {
         StringJoiner sj = new StringJoiner("&");
         for(Map.Entry<String,String> entry : formParams.entrySet())
