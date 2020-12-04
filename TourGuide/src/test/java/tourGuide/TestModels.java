@@ -114,4 +114,91 @@ public class TestModels {
         uuid = null;
         user = null;
     }
+
+    @Test
+    public void testAttraction(){
+        Attraction attraction = new Attraction(
+                "attractionName",
+                "city",
+                "state",
+                100.0,
+                200.0
+        );
+
+        assertEquals("attractionName", attraction.attractionName);
+        assertEquals("city", attraction.city);
+        assertEquals("state", attraction.state);
+        assertTrue(attraction.latitude == 100.0);
+        assertTrue(attraction.longitude == 200.0);
+        assertNotNull(attraction.attractionId);
+
+        attraction = null;
+    }
+
+    @Test
+    public void testLocation(){
+        Location location = new Location(100.0, 200.0);
+
+        assertTrue(location.latitude == 100.0);
+        assertTrue(location.longitude == 200.0);
+
+        location = null;
+    }
+
+    @Test
+    public void testProvider(){
+        UUID uuid = UUID.randomUUID();
+        Provider provider = new Provider(
+                uuid,
+                "providerName",
+                100.0
+        );
+
+        assertEquals("providerName", provider.name);
+        assertEquals(uuid, provider.tripId);
+        assertTrue(provider.price == 100.0);
+
+        uuid = null;
+        provider = null;
+    }
+
+    @Test
+    public void testTripPricerTask() throws Exception {
+        UUID uuid = UUID.randomUUID();
+        TripPricerTask tripPricerTask = new TripPricerTask(
+                "apiKey",
+                uuid,
+                2,
+                3,
+                1
+        );
+
+        assertNotNull(tripPricerTask.call());
+
+        uuid = null;
+        tripPricerTask = null;
+    }
+
+    @Test
+    public void testVisitedLocation(){
+        UUID uuid = UUID.randomUUID();
+        Date date = new Date();
+        Location location = new Location(100.0, 200.0);
+        VisitedLocation visitedLocation = new VisitedLocation(
+                uuid,
+                location,
+                date
+        );
+
+        assertEquals(uuid, visitedLocation.userId);
+        assertNotNull(visitedLocation.location);
+        assertTrue(visitedLocation.location.latitude == 100.0);
+        assertTrue(visitedLocation.location.longitude == 200.0);
+        assertEquals(date, visitedLocation.timeVisited);
+
+        uuid = null;
+        date = null;
+        location = null;
+        visitedLocation = null;
+    }
 }
