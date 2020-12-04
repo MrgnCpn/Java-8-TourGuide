@@ -39,7 +39,7 @@ public class GpsUtilService extends ExternalApiService {
      * @throws JSONException
      * @throws ParseException
      */
-    public VisitedLocation getUserLocation(UUID userId) throws IOException, JSONException, ParseException {
+    public VisitedLocation getUserLocation(UUID userId) throws IOException, JSONException {
         VisitedLocation result = null;
         String url = super.getApiServerUrl("gpsutil.host") + "/getUserLocation";
 

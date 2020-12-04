@@ -117,8 +117,6 @@ public class TourGuideService {
 				e.printStackTrace();
 			} catch (JSONException e) {
 				e.printStackTrace();
-			} catch (ParseException e) {
-				e.printStackTrace();
 			}
 			user.addToVisitedLocations(visitedLocation);
 			try {
