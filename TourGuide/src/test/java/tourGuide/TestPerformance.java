@@ -55,7 +55,7 @@ public class TestPerformance {
 		rewardCentralService = new RewardCentralService(httpRequestService, configurationFilePath);
 		gpsUtilService = new GpsUtilService(httpRequestService, configurationFilePath);
 		rewardsService = new RewardsService(gpsUtilService, rewardCentralService, executorService);
-		InternalTestHelper.setInternalUserNumber(100); // Users should be incremented up to 100,000
+		InternalTestHelper.setInternalUserNumber(100000); // Users should be incremented up to 100,000
 		tourGuideService = new TourGuideService(gpsUtilService, rewardsService, tripPricerService, executorService);
 
 	}

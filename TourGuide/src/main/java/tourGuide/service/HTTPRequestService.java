@@ -37,8 +37,8 @@ public class HTTPRequestService {
         con.setRequestMethod("GET");
         con.setDoOutput(true);
         con.setRequestProperty("Content-Type", "application/json");
-        con.setConnectTimeout(20000);
-        con.setReadTimeout(20000);
+        con.setConnectTimeout(100000);
+        con.setReadTimeout(100000);
         String res = this.getResponse(con);
         con.disconnect();
         return new JSONObject(res);
@@ -63,11 +63,10 @@ public class HTTPRequestService {
         HttpURLConnection con = (HttpURLConnection) reqUrl.openConnection();
         con.setRequestMethod("POST");
         con.setDoOutput(true);
-        con.setConnectTimeout(20000);
-        con.setReadTimeout(20000);
+        con.setConnectTimeout(100000);
+        con.setReadTimeout(100000);
         con.setFixedLengthStreamingMode(out.length);
         con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-        con.connect();
         try(OutputStream os = con.getOutputStream()) {
             os.write(out);
         }
