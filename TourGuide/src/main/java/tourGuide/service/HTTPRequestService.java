@@ -39,7 +39,7 @@ public class HTTPRequestService {
         con.setRequestProperty("Content-Type", "application/json");
         con.setConnectTimeout(100000);
         con.setReadTimeout(100000);
-        String res = this.getResponse(con);
+        String res = getResponse(con);
         con.disconnect();
         return new JSONObject(res);
     }
@@ -70,7 +70,7 @@ public class HTTPRequestService {
         try(OutputStream os = con.getOutputStream()) {
             os.write(out);
         }
-        String res = this.getResponse(con);
+        String res = getResponse(con);
         con.disconnect();
         return new JSONObject(res);
     }
