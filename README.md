@@ -122,5 +122,5 @@ Three docker's containers are created :
 	    URL Params : userName
 		Return user reward balance
 
-## Class Diagram
+## App architecture
 ![alt text](https://github.com/MrgnCpn/OC-Java-Project-8-TourGuide/blob/master/ArchitectureTourGuide.png)
