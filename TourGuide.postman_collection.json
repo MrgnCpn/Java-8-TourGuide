@@ -1,0 +1,899 @@
+{
+	"info": {
+		"_postman_id": "31e303d9-a306-44d6-8a7d-85f619984f5a",
+		"name": "TourGuide",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GpsUtil",
+			"item": [
+				{
+					"name": "GpsUtil - Actuator",
+					"item": [
+						{
+							"name": "GpsUtil - Actuator / INFO",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8081/actuator/info",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"actuator",
+										"info"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GpsUtil - Actuator / HEALTH",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8081/actuator/health",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"actuator",
+										"health"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GpsUtil - Actuator / BEANS",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8081/actuator/beans",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"actuator",
+										"beans"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GpsUtil - Actuator / METRICS",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8081/actuator/metrics",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"actuator",
+										"metrics"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GpsUtil - Actuator / ENV",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8081/actuator/env",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"actuator",
+										"env"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GpsUtil - Actuator / HTTP TRACE",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8081/actuator/httptrace",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"actuator",
+										"httptrace"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "f90a57d9-2d41-463a-9a83-198f33c3c295",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "212e5007-d032-4118-be39-5546b716034a",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "GpsUtil - Get Attractions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/getAttractions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"getAttractions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GpsUtil - Get User location",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/getUserLocation?userId=2e49b779-cf20-4d31-ba50-962afb33b058",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"getUserLocation"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "2e49b779-cf20-4d31-ba50-962afb33b058"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "598bbb3a-14cd-4d66-b800-9272f26d0689",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "6a9b9d0f-7cbe-4259-9f9c-072650fc3258",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "RewardCentral",
+			"item": [
+				{
+					"name": "RewardCentral - Actuator",
+					"item": [
+						{
+							"name": "RewardCentral - Actuator / INFO",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8083/actuator/info",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8083",
+									"path": [
+										"actuator",
+										"info"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "RewardCentral - Actuator / HEALTH",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8083/actuator/health",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8083",
+									"path": [
+										"actuator",
+										"health"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "RewardCentral - Actuator / BEANS",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8083/actuator/beans",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8083",
+									"path": [
+										"actuator",
+										"beans"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "RewardCentral - Actuator / METRICS",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8083/actuator/metrics",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8083",
+									"path": [
+										"actuator",
+										"metrics"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "RewardCentral - Actuator / ENV",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8083/actuator/env",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8083",
+									"path": [
+										"actuator",
+										"env"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "RewardCentral - Actuator / HTTP TRACE",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8083/actuator/httptrace",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8083",
+									"path": [
+										"actuator",
+										"httptrace"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "75f57d70-14c6-46a8-b22c-663d7b3a390f",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "d56587f6-ed3f-4050-a47a-f52ee025f3bf",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "RewardCentral - Get Attraction Reward Points",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/getAttractionRewardPoints?userId=2e49b779-cf20-4d31-ba50-962afb33b058&attractionId=78ea3926-5bc0-4191-bf9a-8bb00b20cef0",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"getAttractionRewardPoints"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "2e49b779-cf20-4d31-ba50-962afb33b058"
+								},
+								{
+									"key": "attractionId",
+									"value": "78ea3926-5bc0-4191-bf9a-8bb00b20cef0"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "TripPricer",
+			"item": [
+				{
+					"name": "TripPricer - Actuator",
+					"item": [
+						{
+							"name": "TripPricer - Actuator / INFO",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8082/actuator/info",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"actuator",
+										"info"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TripPricer - Actuator / HEALTH",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8082/actuator/health",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"actuator",
+										"health"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TripPricer - Actuator / BEANS",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8082/actuator/beans",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"actuator",
+										"beans"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TripPricer - Actuator / METRICS",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8082/actuator/metrics",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"actuator",
+										"metrics"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TripPricer - Actuator / ENV",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8082/actuator/env",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"actuator",
+										"env"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TripPricer - Actuator / HTTP TRACE",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8082/actuator/httptrace",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"actuator",
+										"httptrace"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "3267d0ef-8077-4191-81ac-3741f5c88b3a",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "f4f7438d-8295-4ef4-a520-4f1e2c32436d",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "TripPricer - Get Price",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "apiKey",
+									"value": "test-server-api-key",
+									"type": "text"
+								},
+								{
+									"key": "attractionId",
+									"value": "2e49b779-cf20-4d31-ba50-962afb33b058",
+									"type": "text"
+								},
+								{
+									"key": "adults",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "children",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "nightsStay",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "rewardsPoints",
+									"value": "300",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8082/getPrice",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"getPrice"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "TourGuide - Actuator",
+			"item": [
+				{
+					"name": "TrouGuide - Actuator / INFO",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/actuator/info",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"actuator",
+								"info"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TrouGuide - Actuator / HEALTH",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/actuator/health",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"actuator",
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TrouGuide - Actuator / BEANS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/actuator/beans",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"actuator",
+								"beans"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TrouGuide - Actuator / METRICS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/actuator/metrics",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"actuator",
+								"metrics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TrouGuide - Actuator / ENV",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/actuator/env",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"actuator",
+								"env"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TrouGuide - Actuator / HTTP TRACE",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/actuator/httptrace",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"actuator",
+								"httptrace"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d56765eb-a218-4031-99c8-2f977926ac1c",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "e41dc99a-042d-4a63-a5d5-2ec0a24da6b1",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "TourGuide - All Current Locations",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/getAllCurrentLocations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"getAllCurrentLocations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TourGuide - Trip Deals",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/getTripDeals?userName=internalUser1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"getTripDeals"
+					],
+					"query": [
+						{
+							"key": "userName",
+							"value": "internalUser1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TourGuide - User Location",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/getLocation?userName=internalUser1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"getLocation"
+					],
+					"query": [
+						{
+							"key": "userName",
+							"value": "internalUser1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TourGuide - Nearby Attractions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/getNearbyAttractions?userName=internalUser1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"getNearbyAttractions"
+					],
+					"query": [
+						{
+							"key": "userName",
+							"value": "internalUser1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TourGuide - Rewards",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/getRewards?userName=internalUser1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"getRewards"
+					],
+					"query": [
+						{
+							"key": "userName",
+							"value": "internalUser1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
