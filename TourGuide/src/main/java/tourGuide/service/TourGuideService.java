@@ -203,6 +203,8 @@ public class TourGuideService {
 						res.append("\"city\" : \"").append(a.city).append("\",");
 						res.append("\"state\" : \"").append(a.state).append("\",");
 						res.append("\"distance\" : ").append(rewardsService.getDistance(userLocation.location, a)).append(",");
+						res.append("\"latitude\" : ").append(userLocation.location.latitude).append(",");
+						res.append("\"longitude\" : ").append(userLocation.location.longitude).append(",");
 					try {
 						res.append("\"reward\" : ").append(rewardsService.getRewardPoints(a, user)).append("}");
 					} catch (IOException e) {
