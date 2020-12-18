@@ -28,7 +28,7 @@
 ## Install Project
 
 1. Start your Docker app
-2. Install docker environment : cd "External API"; docker-compose up -d`, 
+2. Install docker environment : `cd "External API"; docker-compose up -d`, 
 Three docker's containers are created :
 * GPSUtil : localhost:8081
 * TripPricer : localhost:8082
@@ -38,7 +38,7 @@ Three docker's containers are created :
 
 ## Running App
 
-`cd TourGuide; ./gradlew bootrun
+`cd TourGuide; ./gradlew bootrun`
 
 ## Testing
 
